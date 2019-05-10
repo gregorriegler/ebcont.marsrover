@@ -64,14 +64,26 @@ class RobotTest {
         verify(reportingModule).reportPosition(newPosition);
     }
 
+    @Test
+    void robotTurnsLeftAndReportsNewDirection() {
+        robot.land();
+
+        robot.executeCommands(new char [] {'l'});
+
+        Direction newDirection = Direction.WEST;
+        verify(reportingModule).reportDirection(newDirection);
+    }
+
     public enum Direction {
-        NORTH
+        NORTH,
+        WEST
     }
 
     public static class Robot {
 
         private final ReportingModule reportingModule;
         private Position currentPosition;
+        private Direction currentDirection;
 
         public Robot(ReportingModule reportingModule) {
             this.reportingModule = reportingModule;
@@ -81,17 +93,20 @@ class RobotTest {
             currentPosition = new Position(0, 0);
             reportingModule.reportPosition(currentPosition);
 
-            Direction currentDirection = Direction.NORTH;
+            currentDirection = Direction.NORTH;
             reportingModule.reportDirection(currentDirection);
         }
 
         public void executeCommands(char[] commands) {
             if(commands[0] == 'f'){
                 currentPosition = currentPosition.northOf();
-            }else {
+            }else if(commands[0] == 'b'){
                 currentPosition = currentPosition.southOf();
+            } else {
+                currentDirection = Direction.WEST;
             }
             reportingModule.reportPosition(currentPosition);
+            reportingModule.reportDirection(currentDirection);
         }
 
     }
