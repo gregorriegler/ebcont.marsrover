@@ -1,3 +1,4 @@
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 
@@ -38,7 +39,7 @@ class RobotTest {
     void moveRobotForwardReportsNewPosition() {
         robot.land();
 
-        robot.executeCommands(new char [] {'f'});
+        robot.executeCommands(new char[]{'f'});
 
         Position newPosition = new Position(0, 1);
         verify(reportingModule).reportPosition(newPosition);
@@ -48,7 +49,7 @@ class RobotTest {
     void moveRobotForwardTwiceReportsNewPosition() {
         robot.land();
 
-        robot.executeCommands(new char [] {'f', 'f'});
+        robot.executeCommands(new char[]{'f', 'f'});
 
         Position newPosition = new Position(0, 2);
         verify(reportingModule).reportPosition(newPosition);
@@ -58,7 +59,7 @@ class RobotTest {
     void moveRobotBackwardReportsNewPosition() {
         robot.land();
 
-        robot.executeCommands(new char [] {'b'});
+        robot.executeCommands(new char[]{'b'});
 
         Position newPosition = new Position(0, -1);
         verify(reportingModule).reportPosition(newPosition);
@@ -68,7 +69,7 @@ class RobotTest {
     void robotTurnsLeftAndReportsNewDirection() {
         robot.land();
 
-        robot.executeCommands(new char [] {'l'});
+        robot.executeCommands(new char[]{'l'});
 
         Direction newDirection = Direction.WEST;
         verify(reportingModule).reportDirection(newDirection);
@@ -78,7 +79,7 @@ class RobotTest {
     void robotTurnsLeftAroundAndReportsNewDirection() {
         robot.land();
 
-        robot.executeCommands(new char [] {'l', 'l', 'l', 'l'});
+        robot.executeCommands(new char[]{'l', 'l', 'l', 'l'});
 
         Direction newDirection = Direction.NORTH;
         verify(reportingModule, atLeast(2)).reportDirection(newDirection);
@@ -88,7 +89,7 @@ class RobotTest {
     void robotTurnsRightAndReportsNewDirection() {
         robot.land();
 
-        robot.executeCommands(new char [] {'r'});
+        robot.executeCommands(new char[]{'r'});
 
         Direction newDirection = Direction.EAST;
         verify(reportingModule).reportDirection(newDirection);
@@ -98,10 +99,18 @@ class RobotTest {
     void robotTurnsRightAroundAndReportsNewDirection() {
         robot.land();
 
-        robot.executeCommands(new char [] {'r', 'r', 'r', 'r'});
+        robot.executeCommands(new char[]{'r', 'r', 'r', 'r'});
 
         Direction newDirection = Direction.NORTH;
         verify(reportingModule, atLeast(2)).reportDirection(newDirection);
+    }
+
+    @Test
+    void sendingInvalidCommandShouldThrowsAnException() {
+        robot.land();
+
+        assertThrows(UnsupportedOperationException.class,
+            () -> robot.executeCommands(new char[]{'X'}));
     }
 
     public enum Direction {
@@ -147,14 +156,21 @@ class RobotTest {
 
         public void executeCommands(char[] commands) {
             for (char command : commands) {
-                if (command == 'f'){
-                    currentPosition = currentPosition.northOf();
-                }else if (command == 'b'){
-                    currentPosition = currentPosition.southOf();
-                } else if (command == 'l'){
-                    currentDirection = currentDirection.left();
-                } else {
-                    currentDirection = currentDirection.right();
+                switch (command) {
+                    case 'f':
+                        currentPosition = currentPosition.northOf();
+                        break;
+                    case 'b':
+                        currentPosition = currentPosition.southOf();
+                        break;
+                    case 'l':
+                        currentDirection = currentDirection.left();
+                        break;
+                    case 'r':
+                        currentDirection = currentDirection.right();
+                        break;
+                    default:
+                        throw new UnsupportedOperationException("Unsupported command " + command);
                 }
             }
 
