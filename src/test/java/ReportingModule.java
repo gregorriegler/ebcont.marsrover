@@ -1,4 +1,4 @@
 public interface ReportingModule {
 
-    void reportPosition(HelloWorldTest.Position position);
+    void reportPosition(RobotTest.Position position);
 }

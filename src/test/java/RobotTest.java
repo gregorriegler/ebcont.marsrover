@@ -5,20 +5,18 @@ import java.util.Objects;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-public class HelloWorldTest {
+class RobotTest {
 
     @Test
-    void landingRobotReceivesCoordinatesAndConfirmsThePosition() {
+    void landingRobotReportsInitialPosition() {
         ReportingModule reportingModule = Mockito.mock(ReportingModule.class);
-
-
         Position initialPosition = new Position(0, 0);
         Robot robot = new Robot(reportingModule);
+
         robot.land();
 
         verify(reportingModule).reportPosition(initialPosition);
     }
-
 
     public static class Robot {
 
