@@ -2,16 +2,23 @@ import static org.mockito.Mockito.verify;
 
 import java.util.Objects;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 class RobotTest {
 
+    private ReportingModule reportingModule;
+    private Robot robot;
+
+    @BeforeEach
+    void setUp() {
+        reportingModule = Mockito.mock(ReportingModule.class);
+        robot = new Robot(reportingModule);
+    }
+
     @Test
     void landingRobotReportsInitialPosition() {
-        ReportingModule reportingModule = Mockito.mock(ReportingModule.class);
-        Robot robot = new Robot(reportingModule);
-
         robot.land();
 
         Position initialPosition = new Position(0, 0);
@@ -19,10 +26,7 @@ class RobotTest {
     }
 
     @Test
-    public void landingRobotReportsItsDirection() {
-        ReportingModule reportingModule = Mockito.mock(ReportingModule.class);
-        Robot robot = new Robot(reportingModule);
-
+    void landingRobotReportsItsDirection() {
         robot.land();
 
         Direction initialDirection = Direction.NORTH;
@@ -31,8 +35,6 @@ class RobotTest {
 
     @Test
     void moveRobotForwardReportsNewPosition() {
-        ReportingModule reportingModule = Mockito.mock(ReportingModule.class);
-        Robot robot = new Robot(reportingModule);
         robot.land();
 
         robot.executeCommands(new char [] {'f'});
