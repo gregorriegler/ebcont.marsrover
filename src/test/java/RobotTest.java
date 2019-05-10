@@ -1,3 +1,4 @@
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 
 import java.util.Objects;
@@ -75,14 +76,16 @@ class RobotTest {
     }
 
     @Test
-    void robotTurnsLeftTwiceAndReportsNewDirection() {
+    void robotTurnsLeftAroundAndReportsNewDirection() {
         robot.land();
 
         robot.executeCommands(new char [] {'l'});
         robot.executeCommands(new char [] {'l'});
+        robot.executeCommands(new char [] {'l'});
+        robot.executeCommands(new char [] {'l'});
 
-        Direction newDirection = Direction.SOUTH;
-        verify(reportingModule).reportDirection(newDirection);
+        Direction newDirection = Direction.NORTH;
+        verify(reportingModule, atLeast(2)).reportDirection(newDirection);
     }
 
     @Test
@@ -93,6 +96,19 @@ class RobotTest {
 
         Direction newDirection = Direction.EAST;
         verify(reportingModule).reportDirection(newDirection);
+    }
+
+    @Test
+    void robotTurnsRightAroundAndReportsNewDirection() {
+        robot.land();
+
+        robot.executeCommands(new char [] {'r'});
+        robot.executeCommands(new char [] {'r'});
+        robot.executeCommands(new char [] {'r'});
+        robot.executeCommands(new char [] {'r'});
+
+        Direction newDirection = Direction.NORTH;
+        verify(reportingModule, atLeast(2)).reportDirection(newDirection);
     }
 
 
