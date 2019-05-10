@@ -48,8 +48,7 @@ class RobotTest {
     void moveRobotForwardTwiceReportsNewPosition() {
         robot.land();
 
-        robot.executeCommands(new char [] {'f'});
-        robot.executeCommands(new char [] {'f'});
+        robot.executeCommands(new char [] {'f', 'f'});
 
         Position newPosition = new Position(0, 2);
         verify(reportingModule).reportPosition(newPosition);
@@ -79,10 +78,7 @@ class RobotTest {
     void robotTurnsLeftAroundAndReportsNewDirection() {
         robot.land();
 
-        robot.executeCommands(new char [] {'l'});
-        robot.executeCommands(new char [] {'l'});
-        robot.executeCommands(new char [] {'l'});
-        robot.executeCommands(new char [] {'l'});
+        robot.executeCommands(new char [] {'l', 'l', 'l', 'l'});
 
         Direction newDirection = Direction.NORTH;
         verify(reportingModule, atLeast(2)).reportDirection(newDirection);
@@ -102,15 +98,11 @@ class RobotTest {
     void robotTurnsRightAroundAndReportsNewDirection() {
         robot.land();
 
-        robot.executeCommands(new char [] {'r'});
-        robot.executeCommands(new char [] {'r'});
-        robot.executeCommands(new char [] {'r'});
-        robot.executeCommands(new char [] {'r'});
+        robot.executeCommands(new char [] {'r', 'r', 'r', 'r'});
 
         Direction newDirection = Direction.NORTH;
         verify(reportingModule, atLeast(2)).reportDirection(newDirection);
     }
-
 
     public enum Direction {
         NORTH,
@@ -154,20 +146,21 @@ class RobotTest {
         }
 
         public void executeCommands(char[] commands) {
-            if(commands[0] == 'f'){
-                currentPosition = currentPosition.northOf();
-            }else if(commands[0] == 'b'){
-                currentPosition = currentPosition.southOf();
-            } else if (commands[0] == 'l'){
-                currentDirection = currentDirection.left();
-            } else {
-                currentDirection = currentDirection.right();
+            for (char command : commands) {
+                if (command == 'f'){
+                    currentPosition = currentPosition.northOf();
+                }else if (command == 'b'){
+                    currentPosition = currentPosition.southOf();
+                } else if (command == 'l'){
+                    currentDirection = currentDirection.left();
+                } else {
+                    currentDirection = currentDirection.right();
+                }
             }
 
             reportingModule.reportPosition(currentPosition);
             reportingModule.reportDirection(currentDirection);
         }
-
     }
 
     public static class Position {

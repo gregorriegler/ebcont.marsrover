@@ -8,8 +8,8 @@ Peaces of the solution
 4.) Way to receive command
 5.) Robot moves forward
 6.) Robot moves backward
-7.) Robot turns left
-8.) Robot turn right
+7.) DONE Robot turns left
+8.) DONE Robot turn right
 9.) Robot detects obstacle in front
 10.) Robot stops if he finds an obstacle and reports
 11.) Robot has a way to report about an obstacle
