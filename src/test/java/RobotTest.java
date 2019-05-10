@@ -54,6 +54,15 @@ class RobotTest {
         verify(reportingModule).reportPosition(newPosition);
     }
 
+    @Test
+    void moveRobotBackwardReportsNewPosition() {
+        robot.land();
+
+        robot.executeCommands(new char [] {'b'});
+
+        Position newPosition = new Position(0, -1);
+        verify(reportingModule).reportPosition(newPosition);
+    }
 
     public enum Direction {
         NORTH
@@ -77,7 +86,11 @@ class RobotTest {
         }
 
         public void executeCommands(char[] commands) {
-            currentPosition = currentPosition.northOf();
+            if(commands[0] == 'f'){
+                currentPosition = currentPosition.northOf();
+            }else {
+                currentPosition = currentPosition.southOf();
+            }
             reportingModule.reportPosition(currentPosition);
         }
 
@@ -94,6 +107,10 @@ class RobotTest {
 
         public Position northOf() {
             return new Position(x, y + 1);
+        }
+
+        public Position southOf() {
+            return new Position(x, y - 1);
         }
 
         @Override
