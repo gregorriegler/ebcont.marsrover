@@ -3,8 +3,8 @@ Peaces of the solution
     - forward, backward
     - turn left/right
     -
-2.) New robot has a position
-3.) Robot has a direction
+2.) DONE New robot has a position
+3.) DONE Robot has a direction
 4.) Way to receive command
 5.) Robot moves forward
 6.) Robot moves backward

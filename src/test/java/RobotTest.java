@@ -29,6 +29,18 @@ class RobotTest {
         verify(reportingModule).reportDirection(initialDirection);
     }
 
+    @Test
+    void moveRobotForwardReportsNewPosition() {
+        ReportingModule reportingModule = Mockito.mock(ReportingModule.class);
+        Robot robot = new Robot(reportingModule);
+        robot.land();
+
+        robot.executeCommands(new char [] {'f'});
+
+        Position newPosition = new Position(0, 1);
+        verify(reportingModule).reportPosition(newPosition);
+    }
+
     public enum Direction {
         NORTH
     }
@@ -48,6 +60,11 @@ class RobotTest {
             Direction currentDirection = Direction.NORTH;
             reportingModule.reportDirection(currentDirection);
         }
+
+        public void executeCommands(char[] commands) {
+            Position newPosition = new Position(0, 1);
+            reportingModule.reportPosition(newPosition);
+        }
     }
 
     public static class Position {
@@ -57,6 +74,11 @@ class RobotTest {
         public Position(int x, int y) {
             this.x = x;
             this.y = y;
+        }
+
+        @Override
+        public String toString() {
+            return "{" + x + ", " + y + '}';
         }
 
         @Override
