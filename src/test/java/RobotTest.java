@@ -43,6 +43,18 @@ class RobotTest {
         verify(reportingModule).reportPosition(newPosition);
     }
 
+    @Test
+    void moveRobotForwardTwiceReportsNewPosition() {
+        robot.land();
+
+        robot.executeCommands(new char [] {'f'});
+        robot.executeCommands(new char [] {'f'});
+
+        Position newPosition = new Position(0, 2);
+        verify(reportingModule).reportPosition(newPosition);
+    }
+
+
     public enum Direction {
         NORTH
     }
@@ -50,13 +62,14 @@ class RobotTest {
     public static class Robot {
 
         private final ReportingModule reportingModule;
+        private Position currentPosition;
 
         public Robot(ReportingModule reportingModule) {
             this.reportingModule = reportingModule;
         }
 
         public void land() {
-            Position currentPosition = new Position(0, 0);
+            currentPosition = new Position(0, 0);
             reportingModule.reportPosition(currentPosition);
 
             Direction currentDirection = Direction.NORTH;
@@ -64,8 +77,8 @@ class RobotTest {
         }
 
         public void executeCommands(char[] commands) {
-            Position newPosition = new Position(0, 1);
-            reportingModule.reportPosition(newPosition);
+            currentPosition = new Position(currentPosition.x, currentPosition.y + 1);
+            reportingModule.reportPosition(currentPosition);
         }
     }
 
