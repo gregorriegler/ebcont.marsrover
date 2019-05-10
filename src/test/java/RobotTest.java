@@ -77,9 +77,10 @@ class RobotTest {
         }
 
         public void executeCommands(char[] commands) {
-            currentPosition = new Position(currentPosition.x, currentPosition.y + 1);
+            currentPosition = currentPosition.northOf();
             reportingModule.reportPosition(currentPosition);
         }
+
     }
 
     public static class Position {
@@ -89,6 +90,10 @@ class RobotTest {
         public Position(int x, int y) {
             this.x = x;
             this.y = y;
+        }
+
+        public Position northOf() {
+            return new Position(x, y + 1);
         }
 
         @Override
