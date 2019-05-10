@@ -85,6 +85,16 @@ class RobotTest {
         verify(reportingModule).reportDirection(newDirection);
     }
 
+    @Test
+    void robotTurnsRightAndReportsNewDirection() {
+        robot.land();
+
+        robot.executeCommands(new char [] {'r'});
+
+        Direction newDirection = Direction.EAST;
+        verify(reportingModule).reportDirection(newDirection);
+    }
+
 
     public enum Direction {
         NORTH,
@@ -98,6 +108,14 @@ class RobotTest {
                 left = values().length - 1;
             }
             return Direction.values()[left];
+        }
+
+        public Direction right() {
+            int right = ordinal() + 1;
+            if (right >= values().length) {
+                right = 0;
+            }
+            return Direction.values()[right];
         }
     }
 
@@ -124,8 +142,10 @@ class RobotTest {
                 currentPosition = currentPosition.northOf();
             }else if(commands[0] == 'b'){
                 currentPosition = currentPosition.southOf();
-            } else {
+            } else if (commands[0] == 'l'){
                 currentDirection = currentDirection.left();
+            } else {
+                currentDirection = currentDirection.right();
             }
 
             reportingModule.reportPosition(currentPosition);
