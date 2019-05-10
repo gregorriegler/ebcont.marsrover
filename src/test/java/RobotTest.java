@@ -74,9 +74,31 @@ class RobotTest {
         verify(reportingModule).reportDirection(newDirection);
     }
 
+    @Test
+    void robotTurnsLeftTwiceAndReportsNewDirection() {
+        robot.land();
+
+        robot.executeCommands(new char [] {'l'});
+        robot.executeCommands(new char [] {'l'});
+
+        Direction newDirection = Direction.SOUTH;
+        verify(reportingModule).reportDirection(newDirection);
+    }
+
+
     public enum Direction {
         NORTH,
-        WEST
+        EAST,
+        SOUTH,
+        WEST;
+
+        public Direction left() {
+            int left = ordinal() - 1;
+            if (left < 0) {
+                left = values().length - 1;
+            }
+            return Direction.values()[left];
+        }
     }
 
     public static class Robot {
@@ -103,8 +125,9 @@ class RobotTest {
             }else if(commands[0] == 'b'){
                 currentPosition = currentPosition.southOf();
             } else {
-                currentDirection = Direction.WEST;
+                currentDirection = currentDirection.left();
             }
+
             reportingModule.reportPosition(currentPosition);
             reportingModule.reportDirection(currentDirection);
         }
