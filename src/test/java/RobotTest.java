@@ -10,12 +10,27 @@ class RobotTest {
     @Test
     void landingRobotReportsInitialPosition() {
         ReportingModule reportingModule = Mockito.mock(ReportingModule.class);
-        Position initialPosition = new Position(0, 0);
         Robot robot = new Robot(reportingModule);
 
         robot.land();
 
+        Position initialPosition = new Position(0, 0);
         verify(reportingModule).reportPosition(initialPosition);
+    }
+
+    @Test
+    public void landingRobotReportsItsDirection() {
+        ReportingModule reportingModule = Mockito.mock(ReportingModule.class);
+        Robot robot = new Robot(reportingModule);
+
+        robot.land();
+
+        Direction initialDirection = Direction.NORTH;
+        verify(reportingModule).reportDirection(initialDirection);
+    }
+
+    public enum Direction {
+        NORTH
     }
 
     public static class Robot {
@@ -29,6 +44,9 @@ class RobotTest {
         public void land() {
             Position currentPosition = new Position(0, 0);
             reportingModule.reportPosition(currentPosition);
+
+            Direction currentDirection = Direction.NORTH;
+            reportingModule.reportDirection(currentDirection);
         }
     }
 
