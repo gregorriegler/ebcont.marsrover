@@ -172,7 +172,7 @@ class RobotTest {
                         currentPosition = currentPosition.forward(currentDirection);
                         break;
                     case 'b':
-                        currentPosition = currentPosition.backword(currentDirection);
+                        currentPosition = currentPosition.backward(currentDirection);
                         break;
                     case 'l':
                         currentDirection = currentDirection.left();
@@ -199,20 +199,20 @@ class RobotTest {
             this.y = y;
         }
 
-        public Position forward(Direction currentDirection) {
-            switch (currentDirection) {
+        public Position forward(Direction direction) {
+            switch (direction) {
                 case NORTH:
                     return new Position(x, y + 1);
                 case WEST:
                     return new Position(x - 1, y);
                 default:
-                    throw new IllegalArgumentException("unknown direction: " + currentDirection);
+                    throw new IllegalArgumentException("unknown direction: " + direction);
 
             }
 
         }
 
-        public Position backword(Direction currentDirection) {
+        public Position backward(Direction direction) {
             return new Position(x, y - 1);
         }
 
