@@ -6,7 +6,7 @@ Peaces of the solution
 2.) DONE New robot has a position
 3.) DONE Robot has a direction
 4.) DONE Way to receive command
-5.) Robot moves forward
+5.) DONE Robot moves forward
 6.) Robot moves backward
 7.) DONE Robot turns left
 8.) DONE Robot turn right

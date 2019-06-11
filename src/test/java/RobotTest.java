@@ -123,6 +123,26 @@ class RobotTest {
         verify(reportingModule).reportPosition(expectedPosition);
     }
 
+    @Test
+    void robotMovesSouth() {
+        robot.land();
+
+        robot.executeCommands(new char[]{'l', 'l', 'f'});
+
+        Position expectedPosition = new Position(0, -1);
+        verify(reportingModule).reportPosition(expectedPosition);
+    }
+
+    @Test
+    void robotMovesEast() {
+        robot.land();
+
+        robot.executeCommands(new char[]{'r', 'f'});
+
+        Position expectedPosition = new Position(1, 0);
+        verify(reportingModule).reportPosition(expectedPosition);
+    }
+
     public enum Direction {
         NORTH,
         EAST,
@@ -168,7 +188,6 @@ class RobotTest {
             for (char command : commands) {
                 switch (command) {
                     case 'f':
-
                         currentPosition = currentPosition.forward(currentDirection);
                         break;
                     case 'b':
@@ -205,9 +224,12 @@ class RobotTest {
                     return new Position(x, y + 1);
                 case WEST:
                     return new Position(x - 1, y);
+                case SOUTH:
+                    return new Position(x, y - 1);
+                case EAST:
+                    return new Position(x + 1, y);
                 default:
                     throw new IllegalArgumentException("unknown direction: " + direction);
-
             }
 
         }
