@@ -163,6 +163,17 @@ class RobotTest {
         verify(reportingModule).reportPosition(expectedPosition);
     }
 
+    @Test
+    void robotFacesWestMovesBackward() {
+        robot.land();
+
+        robot.executeCommands(new char[]{'l', 'b'});
+
+        Position expectedPosition = new Position(1, 0);
+        verify(reportingModule).reportPosition(expectedPosition);
+    }
+
+
     public enum Direction {
         NORTH,
         EAST,
@@ -262,6 +273,8 @@ class RobotTest {
                     return new Position(x - 1, y);
                 case SOUTH:
                     return new Position(x, y + 1);
+                case WEST:
+                    return new Position(x + 1, y);
                 default:
                     throw new IllegalArgumentException("unknown backward direction: " + direction);
             }

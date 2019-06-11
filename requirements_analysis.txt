@@ -7,7 +7,7 @@ Peaces of the solution
 3.) DONE Robot has a direction
 4.) DONE Way to receive command
 5.) DONE Robot moves forward
-6.) Robot moves backward
+6.) DONE Robot moves backward
 7.) DONE Robot turns left
 8.) DONE Robot turn right
 9.) Robot detects obstacle in front
