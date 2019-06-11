@@ -186,4 +186,13 @@ class RobotTest {
 
         verify(reportingModule).reportObstacle(new Position(0, 1));
     }
+    @Test
+    void robotDetectsObstacleIfMovingBackward(){
+        Collection<Position> obstacles = Lists.newArrayList(new Position(0, -1));
+        robot.land(obstacles);
+
+        robot.executeCommands(new char[] {'b'});
+
+        verify(reportingModule).reportObstacle(new Position(0, -1));
+    }
 }

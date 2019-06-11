@@ -32,16 +32,10 @@ public class Robot {
         for (char command : commands) {
             switch (command) {
                 case 'f':
-                    Position newPosition = currentPosition.forward(currentDirection);
-
-                    if(!hasObstacle(newPosition)) {
-                        currentPosition = newPosition;
-                    } else {
-                        reportingModule.reportObstacle(newPosition);
-                    }
+                    currentPosition = handleObstacle(currentPosition.forward(currentDirection));
                     break;
                 case 'b':
-                    currentPosition = currentPosition.backward(currentDirection);
+                    currentPosition = handleObstacle(currentPosition.backward(currentDirection));
                     break;
                 case 'l':
                     currentDirection = currentDirection.left();
@@ -56,6 +50,14 @@ public class Robot {
 
         reportingModule.reportPosition(currentPosition);
         reportingModule.reportDirection(currentDirection);
+    }
+
+    private Position handleObstacle(Position position) {
+        if (hasObstacle(position)) {
+            reportingModule.reportObstacle(position);
+            return currentPosition;
+        }
+        return position;
     }
 
     private boolean hasObstacle(Position position) {
