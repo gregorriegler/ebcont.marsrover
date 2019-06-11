@@ -29,38 +29,54 @@ public class Robot {
     }
 
     public void executeCommands(char[] commands) {
-        for (char command : commands) {
-            switch (command) {
-                case 'f':
-                    currentPosition = handleObstacle(currentPosition.forward(currentDirection));
-                    break;
-                case 'b':
-                    currentPosition = handleObstacle(currentPosition.backward(currentDirection));
-                    break;
-                case 'l':
-                    currentDirection = currentDirection.left();
-                    break;
-                case 'r':
-                    currentDirection = currentDirection.right();
-                    break;
-                default:
-                    throw new UnsupportedOperationException("Unsupported command " + command);
+        try {
+            for (char command : commands) {
+                switch (command) {
+                    case 'f':
+                        currentPosition = handleObstacle(currentPosition.forward(currentDirection));
+                        break;
+                    case 'b':
+                        currentPosition = handleObstacle(currentPosition.backward(currentDirection));
+                        break;
+                    case 'l':
+                        currentDirection = currentDirection.left();
+                        break;
+                    case 'r':
+                        currentDirection = currentDirection.right();
+                        break;
+                    default:
+                        throw new UnsupportedOperationException("Unsupported command " + command);
+                }
             }
-        }
 
-        reportingModule.reportPosition(currentPosition);
-        reportingModule.reportDirection(currentDirection);
+        } catch (ObstacleException e) {
+            reportingModule.reportObstacle(e.getPosition());
+        } finally {
+            reportingModule.reportPosition(currentPosition);
+            reportingModule.reportDirection(currentDirection);
+        }
     }
 
-    private Position handleObstacle(Position position) {
+    private Position handleObstacle(Position position) throws ObstacleException {
         if (hasObstacle(position)) {
-            reportingModule.reportObstacle(position);
-            return currentPosition;
-        }
+            throw new ObstacleException(position);
+    }
         return position;
     }
 
     private boolean hasObstacle(Position position) {
         return this.obstacles.contains(position);
+    }
+
+    private static class ObstacleException extends Exception {
+        private final Position position;
+
+        public ObstacleException(Position position) {
+            this.position = position;
+        }
+
+        public Position getPosition() {
+            return position;
+        }
     }
 }

@@ -216,4 +216,15 @@ class RobotTest {
         Position expectedPosition = new Position(0, 0);
         verify(reportingModule, times(2)).reportPosition(expectedPosition);
     }
+
+    @Test
+    void robotMovesAgainstObstacleAndAbortsSequence() {
+        Collection<Position> obstacles = Lists.newArrayList(new Position(0, 1));
+        robot.land(obstacles);
+
+        robot.executeCommands(new char[]{'f', 'r', 'f'});
+
+        Position expectedPosition = new Position(0, 0);
+        verify(reportingModule, times(2)).reportPosition(expectedPosition);
+    }
 }
