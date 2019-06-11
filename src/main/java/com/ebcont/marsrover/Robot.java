@@ -13,10 +13,10 @@ public class Robot {
     private Direction currentDirection;
     private Collection<Position> obstacles;
     private final Map<Character, Command> commands = new ImmutableMap.Builder<Character, Command>()
-        .put('f', new MoveForwardCommmand())
-        .put('b', new MoveBackwardCommmand())
-        .put('l', new TurnLeftCommmand())
-        .put('r', new TurnRightCommmand())
+        .put('f', new MoveForwardCommand())
+        .put('b', new MoveBackwardCommand())
+        .put('l', new TurnLeftCommand())
+        .put('r', new TurnRightCommand())
         .build();
 
     public Robot(ReportingModule reportingModule) {
@@ -38,16 +38,14 @@ public class Robot {
     }
 
     public void executeCommands(char[] characterSequence) {
-        try {
-            for (char character : characterSequence) {
-                commandByCharacter(character).execute(this);
-            }
-        } catch (ObstacleException e) {
-            reportingModule.reportObstacle(e.getPosition());
-        } finally {
-            reportingModule.reportPosition(currentPosition);
-            reportingModule.reportDirection(currentDirection);
+        for (char character : characterSequence) {
+            Command command = commandByCharacter(character);
+            boolean shouldContinue = command.execute(this);
+            if (!shouldContinue) break;
         }
+
+        reportingModule.reportPosition(currentPosition);
+        reportingModule.reportDirection(currentDirection);
     }
 
     private Command commandByCharacter(char command) {
@@ -55,14 +53,6 @@ public class Robot {
             throw new UnsupportedOperationException("Unsupported command " + command);
         }
         return this.commands.get(command);
-    }
-
-    private void moveForward() throws ObstacleException {
-        currentPosition = handleObstacle(currentPosition.forward(currentDirection));
-    }
-
-    private void moveBackward() throws ObstacleException {
-        currentPosition = handleObstacle(currentPosition.backward(currentDirection));
     }
 
     private void turnLeft() {
@@ -73,62 +63,71 @@ public class Robot {
         currentDirection = currentDirection.right();
     }
 
-    private Position handleObstacle(Position position) throws ObstacleException {
+    private boolean moveForward() {
+        Position position = currentPosition.forward(currentDirection);
+        return moveTo(position);
+    }
+
+    private boolean moveBackward() {
+        Position position = currentPosition.backward(currentDirection);
+        return moveTo(position);
+    }
+
+    private boolean moveTo(Position position) {
+        if (scanForObstacle(position)) return false;
+
+        currentPosition = position;
+        return true;
+    }
+
+    private boolean scanForObstacle(Position position) {
         if (hasObstacle(position)) {
-            throw new ObstacleException(position);
+            reportingModule.reportObstacle(position);
+            return true;
         }
-        return position;
+        return false;
     }
 
     private boolean hasObstacle(Position position) {
         return this.obstacles.contains(position);
     }
 
-    private static class ObstacleException extends Exception {
-        private final Position position;
-
-        public ObstacleException(Position position) {
-            this.position = position;
-        }
-
-        public Position getPosition() {
-            return position;
-        }
-    }
-
     private interface Command {
-        void execute(Robot robot) throws ObstacleException;
+
+        boolean execute(Robot robot);
     }
 
-    private class MoveForwardCommmand implements Command {
+    private class MoveForwardCommand implements Command {
 
         @Override
-        public void execute(Robot robot) throws ObstacleException {
-            robot.moveForward();
+        public boolean execute(Robot robot) {
+            return robot.moveForward();
         }
     }
 
-    private class MoveBackwardCommmand implements Command {
+    private class MoveBackwardCommand implements Command {
 
         @Override
-        public void execute(Robot robot) throws ObstacleException {
-            robot.moveBackward();
+        public boolean execute(Robot robot) {
+            return robot.moveBackward();
         }
     }
 
-    private class TurnLeftCommmand implements Command {
+    private class TurnLeftCommand implements Command {
 
         @Override
-        public void execute(Robot robot) {
+        public boolean execute(Robot robot) {
             robot.turnLeft();
+            return true;
         }
     }
 
-    private class TurnRightCommmand implements Command {
+    private class TurnRightCommand implements Command {
 
         @Override
-        public void execute(Robot robot) {
+        public boolean execute(Robot robot) {
             robot.turnRight();
+            return true;
         }
     }
 
