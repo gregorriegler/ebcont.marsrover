@@ -4,6 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -171,5 +175,15 @@ class RobotTest {
 
         Position expectedPosition = new Position(1, 0);
         verify(reportingModule).reportPosition(expectedPosition);
+    }
+
+    @Test
+    void robotDetectsObstacleIfMovingForward(){
+        Collection<Position> obstacles = Lists.newArrayList(new Position(0, 1));
+        robot.land(obstacles);
+
+        robot.executeCommands(new char[] {'f'});
+
+        verify(reportingModule).reportObstacle(new Position(0, 1));
     }
 }
