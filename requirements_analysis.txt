@@ -16,3 +16,6 @@ Peaces of the solution
 12.) DONE Robot has a way to report about an obstacle
 13.) When robot crosses edge it wraps around
 
+TODO maybe refactor to command pattern
+TODO get rid of try catch blocks
+TODO possibly get rid of switch statements
