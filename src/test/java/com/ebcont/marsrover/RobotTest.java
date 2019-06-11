@@ -1,8 +1,8 @@
+package com.ebcont.marsrover;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
-
-import java.util.Objects;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -171,135 +171,5 @@ class RobotTest {
 
         Position expectedPosition = new Position(1, 0);
         verify(reportingModule).reportPosition(expectedPosition);
-    }
-
-
-    public enum Direction {
-        NORTH,
-        EAST,
-        SOUTH,
-        WEST;
-
-        public Direction left() {
-            int left = ordinal() - 1;
-            if (left < 0) {
-                left = values().length - 1;
-            }
-            return Direction.values()[left];
-        }
-
-        public Direction right() {
-            int right = ordinal() + 1;
-            if (right >= values().length) {
-                right = 0;
-            }
-            return Direction.values()[right];
-        }
-    }
-
-    public static class Robot {
-
-        private final ReportingModule reportingModule;
-        private Position currentPosition;
-        private Direction currentDirection;
-
-        public Robot(ReportingModule reportingModule) {
-            this.reportingModule = reportingModule;
-        }
-
-        public void land() {
-            currentPosition = new Position(0, 0);
-            reportingModule.reportPosition(currentPosition);
-
-            currentDirection = Direction.NORTH;
-            reportingModule.reportDirection(currentDirection);
-        }
-
-        public void executeCommands(char[] commands) {
-            for (char command : commands) {
-                switch (command) {
-                    case 'f':
-                        currentPosition = currentPosition.forward(currentDirection);
-                        break;
-                    case 'b':
-                        currentPosition = currentPosition.backward(currentDirection);
-                        break;
-                    case 'l':
-                        currentDirection = currentDirection.left();
-                        break;
-                    case 'r':
-                        currentDirection = currentDirection.right();
-                        break;
-                    default:
-                        throw new UnsupportedOperationException("Unsupported command " + command);
-                }
-            }
-
-            reportingModule.reportPosition(currentPosition);
-            reportingModule.reportDirection(currentDirection);
-        }
-    }
-
-    public static class Position {
-        private final int x;
-        private final int y;
-
-        public Position(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        public Position forward(Direction direction) {
-            switch (direction) {
-                case NORTH:
-                    return new Position(x, y + 1);
-                case WEST:
-                    return new Position(x - 1, y);
-                case SOUTH:
-                    return new Position(x, y - 1);
-                case EAST:
-                    return new Position(x + 1, y);
-                default:
-                    throw new IllegalArgumentException("unknown forward direction: " + direction);
-            }
-
-        }
-
-        public Position backward(Direction direction) {
-            switch(direction) {
-                case NORTH:
-                    return new Position(x, y - 1);
-                case EAST:
-                    return new Position(x - 1, y);
-                case SOUTH:
-                    return new Position(x, y + 1);
-                case WEST:
-                    return new Position(x + 1, y);
-                default:
-                    throw new IllegalArgumentException("unknown backward direction: " + direction);
-            }
-        }
-
-        @Override
-        public String toString() {
-            return "{" + x + ", " + y + '}';
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-            Position position = (Position) o;
-            return x == position.x && y == position.y;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(x, y);
-        }
     }
 }
