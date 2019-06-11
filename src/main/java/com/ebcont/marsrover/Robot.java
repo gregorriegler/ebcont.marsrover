@@ -13,10 +13,10 @@ public class Robot {
     private Direction currentDirection;
     private Collection<Position> obstacles;
     private final Map<Character, Command> commands = new ImmutableMap.Builder<Character, Command>()
-        .put('f', new MoveForwardCommand())
-        .put('b', new MoveBackwardCommand())
-        .put('l', new TurnLeftCommand())
-        .put('r', new TurnRightCommand())
+        .put('f', robot -> robot.moveForward())
+        .put('b', robot -> robot.moveBackward())
+        .put('l', robot -> {robot.turnLeft(); return true;})
+        .put('r', robot -> {robot.turnRight(); return true;})
         .build();
 
     public Robot(ReportingModule reportingModule) {
@@ -92,44 +92,9 @@ public class Robot {
         return this.obstacles.contains(position);
     }
 
+    @FunctionalInterface
     private interface Command {
 
         boolean execute(Robot robot);
     }
-
-    private class MoveForwardCommand implements Command {
-
-        @Override
-        public boolean execute(Robot robot) {
-            return robot.moveForward();
-        }
-    }
-
-    private class MoveBackwardCommand implements Command {
-
-        @Override
-        public boolean execute(Robot robot) {
-            return robot.moveBackward();
-        }
-    }
-
-    private class TurnLeftCommand implements Command {
-
-        @Override
-        public boolean execute(Robot robot) {
-            robot.turnLeft();
-            return true;
-        }
-    }
-
-    private class TurnRightCommand implements Command {
-
-        @Override
-        public boolean execute(Robot robot) {
-            robot.turnRight();
-            return true;
-        }
-    }
-
-
 }
