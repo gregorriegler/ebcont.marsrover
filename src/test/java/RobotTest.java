@@ -36,36 +36,6 @@ class RobotTest {
     }
 
     @Test
-    void moveRobotForwardReportsNewPosition() {
-        robot.land();
-
-        robot.executeCommands(new char[]{'f'});
-
-        Position newPosition = new Position(0, 1);
-        verify(reportingModule).reportPosition(newPosition);
-    }
-
-    @Test
-    void moveRobotForwardTwiceReportsNewPosition() {
-        robot.land();
-
-        robot.executeCommands(new char[]{'f', 'f'});
-
-        Position newPosition = new Position(0, 2);
-        verify(reportingModule).reportPosition(newPosition);
-    }
-
-    @Test
-    void moveRobotBackwardReportsNewPosition() {
-        robot.land();
-
-        robot.executeCommands(new char[]{'b'});
-
-        Position newPosition = new Position(0, -1);
-        verify(reportingModule).reportPosition(newPosition);
-    }
-
-    @Test
     void robotTurnsLeftAndReportsNewDirection() {
         robot.land();
 
@@ -114,7 +84,27 @@ class RobotTest {
     }
 
     @Test
-    void robotMovesWest() {
+    void robotFacesNorthMovesForward() {
+        robot.land();
+
+        robot.executeCommands(new char[]{'f'});
+
+        Position newPosition = new Position(0, 1);
+        verify(reportingModule).reportPosition(newPosition);
+    }
+
+    @Test
+    void robotFacesNorthMovesForwardTwice() {
+        robot.land();
+
+        robot.executeCommands(new char[]{'f', 'f'});
+
+        Position newPosition = new Position(0, 2);
+        verify(reportingModule).reportPosition(newPosition);
+    }
+
+    @Test
+    void robotFacesWestMovesForward() {
         robot.land();
 
         robot.executeCommands(new char[]{'l', 'f'});
@@ -124,7 +114,7 @@ class RobotTest {
     }
 
     @Test
-    void robotMovesSouth() {
+    void robotFacesSouthMovesForward() {
         robot.land();
 
         robot.executeCommands(new char[]{'l', 'l', 'f'});
@@ -134,12 +124,42 @@ class RobotTest {
     }
 
     @Test
-    void robotMovesEast() {
+    void robotFacesEastMovesForward() {
         robot.land();
 
         robot.executeCommands(new char[]{'r', 'f'});
 
         Position expectedPosition = new Position(1, 0);
+        verify(reportingModule).reportPosition(expectedPosition);
+    }
+
+    @Test
+    void robotFacesNorthMovesBackward() {
+        robot.land();
+
+        robot.executeCommands(new char[]{'b'});
+
+        Position newPosition = new Position(0, -1);
+        verify(reportingModule).reportPosition(newPosition);
+    }
+
+    @Test
+    void robotFacesEastMovesBackward() {
+        robot.land();
+
+        robot.executeCommands(new char[]{'r', 'b'});
+
+        Position expectedPosition = new Position(-1, 0);
+        verify(reportingModule).reportPosition(expectedPosition);
+    }
+
+    @Test
+    void robotFacesSouthMovesBackward() {
+        robot.land();
+
+        robot.executeCommands(new char[]{'r', 'r', 'b'});
+
+        Position expectedPosition = new Position(0, 1);
         verify(reportingModule).reportPosition(expectedPosition);
     }
 
@@ -229,13 +249,22 @@ class RobotTest {
                 case EAST:
                     return new Position(x + 1, y);
                 default:
-                    throw new IllegalArgumentException("unknown direction: " + direction);
+                    throw new IllegalArgumentException("unknown forward direction: " + direction);
             }
 
         }
 
         public Position backward(Direction direction) {
-            return new Position(x, y - 1);
+            switch(direction) {
+                case NORTH:
+                    return new Position(x, y - 1);
+                case EAST:
+                    return new Position(x - 1, y);
+                case SOUTH:
+                    return new Position(x, y + 1);
+                default:
+                    throw new IllegalArgumentException("unknown backward direction: " + direction);
+            }
         }
 
         @Override
