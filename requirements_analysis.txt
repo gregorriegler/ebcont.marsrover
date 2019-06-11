@@ -10,8 +10,9 @@ Peaces of the solution
 6.) DONE Robot moves backward
 7.) DONE Robot turns left
 8.) DONE Robot turn right
-9.) Robot detects obstacle in front
-10.) Robot stops if he finds an obstacle and reports
-11.) Robot has a way to report about an obstacle
-12.) When robot crosses edge it wraps around
+9.) DONE Robot detects obstacle in front
+10.) DONE Robot stops if he finds an obstacle and reports
+11.) Robot aborts the command sequence when an obstacle is encountered
+12.) DONE Robot has a way to report about an obstacle
+13.) When robot crosses edge it wraps around
 

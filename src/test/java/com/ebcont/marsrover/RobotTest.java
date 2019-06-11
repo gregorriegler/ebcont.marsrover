@@ -1,10 +1,8 @@
 package com.ebcont.marsrover;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.atLeast;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import org.assertj.core.util.Lists;
@@ -178,21 +176,44 @@ class RobotTest {
     }
 
     @Test
-    void robotDetectsObstacleIfMovingForward(){
+    void robotDetectsObstacleIfMovingForward() {
         Collection<Position> obstacles = Lists.newArrayList(new Position(0, 1));
         robot.land(obstacles);
 
-        robot.executeCommands(new char[] {'f'});
+        robot.executeCommands(new char[]{'f'});
 
         verify(reportingModule).reportObstacle(new Position(0, 1));
     }
+
     @Test
-    void robotDetectsObstacleIfMovingBackward(){
+    void robotDetectsObstacleIfMovingBackward() {
         Collection<Position> obstacles = Lists.newArrayList(new Position(0, -1));
         robot.land(obstacles);
 
-        robot.executeCommands(new char[] {'b'});
+        robot.executeCommands(new char[]{'b'});
 
         verify(reportingModule).reportObstacle(new Position(0, -1));
+    }
+
+    @Test
+    void robotMovesForwardAgainstObstacleDoesntMove() {
+        Collection<Position> obstacles = Lists.newArrayList(new Position(0, 1));
+        robot.land(obstacles);
+
+        robot.executeCommands(new char[]{'f'});
+
+        Position expectedPosition = new Position(0, 0);
+        verify(reportingModule, times(2)).reportPosition(expectedPosition);
+    }
+
+    @Test
+    void robotMovesBackwardAgainstObstacleDoesntMove() {
+        Collection<Position> obstacles = Lists.newArrayList(new Position(0, -1));
+        robot.land(obstacles);
+
+        robot.executeCommands(new char[]{'b'});
+
+        Position expectedPosition = new Position(0, 0);
+        verify(reportingModule, times(2)).reportPosition(expectedPosition);
     }
 }
